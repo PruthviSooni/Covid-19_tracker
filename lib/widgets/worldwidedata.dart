@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'Card.dart';
 
-class WorldWideData extends StatelessWidget {
+class WorldWideData extends StatefulWidget {
   const WorldWideData({
     Key key,
     @required this.totalCases,
@@ -17,6 +17,11 @@ class WorldWideData extends StatelessWidget {
   final int totalDeaths;
 
   @override
+  _WorldWideDataState createState() => _WorldWideDataState();
+}
+
+class _WorldWideDataState extends State<WorldWideData> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: GridView(
@@ -27,22 +32,22 @@ class WorldWideData extends StatelessWidget {
         children: <Widget>[
           ReuseCard(
             title: 'Total Cases',
-            data: totalCases,
+            data: widget.totalCases,
             color: Color(0xffFFFF00),
           ),
           ReuseCard(
             title: 'Total Recoveries',
-            data: totalRecoveries,
+            data: widget.totalRecoveries,
             color: Color(0xff32cd32),
           ),
           ReuseCard(
             title: 'Daily Cases',
-            data: dailyCases,
+            data: widget.dailyCases,
             color: Color(0xffffc30b),
           ),
           ReuseCard(
             title: 'Total Deaths',
-            data: totalDeaths,
+            data: widget.totalDeaths,
             color: Color(0xffdc143c),
           ),
         ],

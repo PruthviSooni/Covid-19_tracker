@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:number_slide_animation/number_slide_animation.dart';
 
-class ReuseCard extends StatelessWidget {
+class ReuseCard extends StatefulWidget {
   final dynamic data;
   final String title;
   final Color color;
@@ -13,6 +13,11 @@ class ReuseCard extends StatelessWidget {
       @required this.color,
       this.textStyle});
 
+  @override
+  _ReuseCardState createState() => _ReuseCardState();
+}
+
+class _ReuseCardState extends State<ReuseCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +34,8 @@ class ReuseCard extends StatelessWidget {
             children: [
               Container(
                 child: Text(
-                  '$title',
-                  style: TextStyle(fontSize: 20, color: color),
+                  '${widget.title}',
+                  style: TextStyle(fontSize: 20, color: widget.color),
                 ),
                 padding: EdgeInsets.only(
                   top: 5,
@@ -41,14 +46,14 @@ class ReuseCard extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 25),
             child: NumberSlideAnimation(
-              number: '$data',
+              number: '${widget.data}',
               duration: Duration(seconds: 2),
               curve: Curves.decelerate,
               textStyle: TextStyle(
-                fontSize: 40,
-                color: color,
+                fontSize: 38,
+                color: widget.color,
               ),
             ),
           ),

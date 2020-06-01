@@ -6,11 +6,12 @@ class MostAffectedCountry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 10),
       child: ListView.builder(
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Row(
               children: <Widget>[
                 Image.network(
