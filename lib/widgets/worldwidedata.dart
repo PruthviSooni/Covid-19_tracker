@@ -2,25 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'Card.dart';
 
-class WorldWideData extends StatefulWidget {
-  const WorldWideData({
-    Key key,
-    @required this.totalCases,
-    @required this.totalRecoveries,
-    @required this.dailyCases,
-    @required this.totalDeaths,
-  }) : super(key: key);
+class WorldWideData extends StatelessWidget {
+  WorldWideData({
+    @required this.worldData,
+  });
 
-  final int totalCases;
-  final int totalRecoveries;
-  final int dailyCases;
-  final int totalDeaths;
+  final Map worldData;
 
-  @override
-  _WorldWideDataState createState() => _WorldWideDataState();
-}
-
-class _WorldWideDataState extends State<WorldWideData> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,22 +20,22 @@ class _WorldWideDataState extends State<WorldWideData> {
         children: <Widget>[
           ReuseCard(
             title: 'Total Cases',
-            data: widget.totalCases,
+            data: worldData['cases'].toString(),
             color: Color(0xffFFFF00),
           ),
           ReuseCard(
             title: 'Total Recoveries',
-            data: widget.totalRecoveries,
+            data: worldData['recovered'].toString(),
             color: Color(0xff32cd32),
           ),
           ReuseCard(
-            title: 'Daily Cases',
-            data: widget.dailyCases,
+            title: 'Active',
+            data: worldData['active'].toString(),
             color: Color(0xffffc30b),
           ),
           ReuseCard(
             title: 'Total Deaths',
-            data: widget.totalDeaths,
+            data: worldData['deaths'].toString(),
             color: Color(0xffdc143c),
           ),
         ],
