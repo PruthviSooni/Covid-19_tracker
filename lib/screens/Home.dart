@@ -12,8 +12,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var data;
+  dynamic data;
   dynamic countryData;
+  var time;
+  int timeStamp;
   int totalCases;
   int totalDeaths;
   int totalRecoveries;
@@ -23,30 +25,21 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    super.initState();
     fetchData();
+    super.initState();
   }
 
-  void worldwideStats() async {
+  worldwideStats() async {
     data = await NetworkHelper().getWorldWideData();
     setState(() {
       if (data != null) {
-        var totalCase = data['cases'];
-        totalCases = totalCase;
-        var recover = data['recovered'];
-        totalRecoveries = recover;
-        var deaths = data['deaths'];
-        totalDeaths = deaths;
-        var daily = data['todayCases'];
-        dailyCases = daily;
-        print('------------------');
-        print(totalCases);
-        print(totalRecoveries);
-        print(dailyCases);
-        print(totalDeaths);
+        timeStamp = data['updated'];
+        time = new DateTime.fromMillisecondsSinceEpoch(timeStamp);
+        print(time);
+        print(data['cases'].toString());
         return data;
       } else {
-        print('data not found');
+        return print('data not found');
       }
     });
   }
@@ -63,11 +56,11 @@ class _HomeState extends State<Home> {
   }
 
   Future fetchData() async {
-    await Future.delayed(Duration(seconds: 2));
     setState(() {
       worldwideStats();
       countryStats();
     });
+    print('fetching');
   }
 
   @override
@@ -78,10 +71,13 @@ class _HomeState extends State<Home> {
       ),
       body: data != null
           ? SingleChildScrollView(
-              dragStartBehavior: DragStartBehavior.down,
+        dragStartBehavior: DragStartBehavior.start,
               child: RefreshIndicator(
+                onRefresh: () async {
+                  await Future.delayed(Duration(seconds: 3));
+                  fetchData();
+                },
                 backgroundColor: Colors.white,
-                onRefresh: fetchData,
                 child: Column(
                   children: <Widget>[
                     //Covid quote
@@ -92,92 +88,96 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "$quote",
-                        style: TextStyle(
-                            color: Colors.deepOrange,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                            letterSpacing: 1),
-                      ),
-                    ),
-                    //Worldwide Title
+                  style: TextStyle(
+                      color: Colors.deepOrange,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                      letterSpacing: 1),
+                ),
+              ),
+              //Worldwide Title
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                     Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 10, left: 10),
-                            child: Text(
-                              "WORLDWIDE",
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontFamily: 'Montserrat',
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                          Container(
-                            margin:
-                                EdgeInsets.only(top: 10, left: 10, right: 10),
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RegionalStats(
-                                      countryList: countryData,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Regional",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: 'Montserrat',
-                                    letterSpacing: 1),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    //worldwide stats
-                    WorldWideData(
-                        totalCases: totalCases,
-                        totalRecoveries: totalRecoveries,
-                        dailyCases: dailyCases,
-                        totalDeaths: totalDeaths),
-                    //Effected Countries Title
-                    Container(
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 25, left: 10),
+                      margin: EdgeInsets.only(top: 10, left: 10),
                       child: Text(
-                        "Most Effected Countries",
+                        "WORLDWIDE",
                         style: TextStyle(
                             fontSize: 25,
                             fontFamily: 'Montserrat',
                             letterSpacing: 2),
                       ),
                     ),
-                    countryData != null
-                        ? MostAffectedCountry(countryData: countryData)
-                        : CircularProgressIndicator(),
                     Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Center(
-                          child: Text(
-                        'WE ARE TOGETHER IN THE FIGHT',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      )),
+                      margin:
+                      EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegionalStats(
+                                countryList: countryData,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Regional",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              letterSpacing: 1),
+                        ),
+                      ),
                     ),
-                    SizedBox(
-                      height: 50,
-                    )
                   ],
                 ),
               ),
-            )
+              //worldwide stats
+              WorldWideData(worldData: data),
+              //Updated Time
+              Container(
+                margin: EdgeInsets.all(9),
+                child: Text(
+                  "Updated on : " + time.toString(),
+                  style: TextStyle(color: Colors.grey, letterSpacing: 1),
+                ),
+              ),
+              //Effected Countries Title
+              Container(
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 0, left: 10),
+                child: Text(
+                  "Most Effected Countries",
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontFamily: 'Montserrat',
+                      letterSpacing: 2),
+                ),
+              ),
+              countryData != null
+                  ? MostAffectedCountry(countryData: countryData)
+                  : CircularProgressIndicator(),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Center(
+                    child: Text(
+                      'WE ARE TOGETHER IN THE FIGHT',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    )),
+              ),
+              SizedBox(
+                height: 50,
+              )
+            ],
+          ),
+        ),
+      )
           : Center(
         child: Container(
           child: CircularProgressIndicator(

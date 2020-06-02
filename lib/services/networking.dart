@@ -6,11 +6,11 @@ class NetworkHelper {
   final String worldwideUrl = 'https://disease.sh/v2/all';
 
   getWorldWideData() async {
-    String data;
+    Map worldData;
     http.Response response = await http.get(worldwideUrl);
     if (response.statusCode == 200) {
-      data = response.body;
-      return jsonDecode(data);
+      worldData = jsonDecode(response.body);
+      return worldData;
     } else {
       print(response.statusCode);
     }

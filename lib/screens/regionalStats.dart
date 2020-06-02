@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tracker/screens/search.dart';
 
 class RegionalStats extends StatelessWidget {
   final List countryList;
@@ -14,6 +15,10 @@ class RegionalStats extends StatelessWidget {
         accentColor: Colors.grey[800],
         scaffoldBackgroundColor: Colors.grey[900],
         fontFamily: 'Montserrat',
+        appBarTheme: AppBarTheme(
+          brightness: Theme.of(context).brightness,
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
       ),
       home: Scaffold(
         appBar: AppBar(
@@ -25,6 +30,14 @@ class RegionalStats extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: Search(countryList));
+              },
+            )
+          ],
         ),
         body: countryList != null
             ? Container(
