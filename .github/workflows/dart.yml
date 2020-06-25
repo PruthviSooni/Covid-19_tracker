@@ -5,9 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -19,5 +19,3 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - run: flutter pub get
     - run: flutter build apk
-
-
